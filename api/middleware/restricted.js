@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const {JWT_SECRET} = 'shh'
+const {JWT_SECRET} = process.env
 
 const User = require('../users/users-model')
 

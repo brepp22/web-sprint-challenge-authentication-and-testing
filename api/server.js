@@ -4,6 +4,8 @@ const helmet = require('helmet');
 
 const { restricted } = require('./middleware/restricted.js');
 
+require('dotenv').config()
+
 const authRouter = require('./auth/auth-router.js');
 const jokesRouter = require('./jokes/jokes-router.js');
 
