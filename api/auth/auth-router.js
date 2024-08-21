@@ -5,9 +5,15 @@ const jwt =  require('jsonwebtoken')
 const User = require('../users/users-model')
 const {JWT_SECRET} = process.env
 
-router.post('/register', (req, res, next) => {
+router.post('/register', checkUsernameExists , (req, res, next) => {
   const { username , password } = req.body
+
+  if(!username || !password) {
+    return res.status(400).json({message: 'username and password required'})
+  }
+
   const hash = bcrypt.hashSync(password, 8)
+  
   User.add({username, password: hash})
     .then(newUser => {
       res.status(201).json(newUser)
@@ -40,27 +46,7 @@ router.post('/register', (req, res, next) => {
   */
 });
 
-router.post('/login',checkUsernameExists , async (req, res, next) => {
-  // let { username , password } = req.body
-
-  // if (!username || !password) {
-  //   return res.status(400).json({ message: 'username and password required' })
-  // }
-
-  // User.findBy({username})
-  //   .then(([user]) => {
-  //     if (user && bcrypt.compareSync(password , user.password)) {
-  //       const token = generateToken(user)
-  //       console.log(token)
-  //       res.status(200).json({
-  //         message: `welcome, ${user.username}`,
-  //         token,
-  //       })
-  //     }else{
-  //       next({status: 401 , message: 'invalid credentials'})
-  //     }
-  //   })
-  //   .catch(next)
+router.post('/login', async (req, res, next) => {
 
   try {
     const { username, password } = req.body;
