@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const {JWT_SECRET} = process.env
+const {JWT_SECRET} = 'shh'
 
 const User = require('../users/users-model')
 
@@ -7,9 +7,9 @@ const User = require('../users/users-model')
 const restricted = (req, res, next) => {
   const token = req.headers.authorization
     if(!token){
-      next({ status: 401 , message: 'token required'})
+      return res.status(401).json({message: 'token required'})
     }
-    else if (token) {
+  
       jwt.verify(token, JWT_SECRET, (err, decodedToken) => {
         if (err) {
           next({ status: 401, message: "token invalid" })
@@ -19,9 +19,7 @@ const restricted = (req, res, next) => {
           next()
         }
       })
-    } else {
-      next({ status: 401, message: 'token required' })
-    }  /*
+     /*
     IMPLEMENT
 
     1- On valid token in the Authorization header, call next.
