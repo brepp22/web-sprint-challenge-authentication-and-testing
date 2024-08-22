@@ -10,8 +10,7 @@ router.post('/register', checkUsernameExists , (req, res, next) => {
 
   if(!username || !password) {
     return res.status(400).json({message: 'username and password required'})
-  }
-
+  } else {
   const hash = bcrypt.hashSync(password, 8)
 
   User.add({username, password: hash})
@@ -19,6 +18,9 @@ router.post('/register', checkUsernameExists , (req, res, next) => {
       res.status(201).json(newUser)
     })
     .catch(next)
+  }
+
+
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.

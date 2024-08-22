@@ -38,9 +38,13 @@ const restricted = (req, res, next) => {
 };
 
 const checkUsernameExists = async (req, res, next) => {
+  
   try{
     const [user] = await User.findBy({ username : req.body.username })
-    if(user){
+    if(!req.body.username || !req.body.password){
+      return res.status(400).json({message: 'username and password required'})
+    }
+    else if(user){
       return res.status(400).json({message: 'username already taken'})
     } else {
       req.user = user
