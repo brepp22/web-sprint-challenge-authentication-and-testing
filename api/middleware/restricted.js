@@ -7,21 +7,23 @@ const User = require('../users/users-model')
 const restricted = (req, res, next) => {
   const token = req.headers.authorization
 
-  if (token) {
+  if(!token){
+    next({ status: 401 , message: 'Token required'})
+  }
+  else if (token) {
     jwt.verify(token, JWT_SECRET, (err, decodedToken) => {
       if (err) {
-        next({ status: 401, message: "token invalid" })
+        next({ status: 401, message: "Token invalid" })
       } else {
         req.decodedJwt = decodedToken
         console.log('decoded token', req.decodedJwt)
-
         next()
       }
     })
   } else {
-    next({ status: 401, message: 'token required' })
-  }
+    next({ status: 401, message: 'You shall not pass!' })
 
+  }
       
       
      /*
@@ -38,13 +40,14 @@ const restricted = (req, res, next) => {
 };
 
 const checkUsernameExists = async (req, res, next) => {
-  
-  try{
-    const [user] = await User.findBy({ username : req.body.username })
-    if(!req.body.username || !req.body.password){
+  if(!req.body.username || !req.body.password){
       return res.status(400).json({message: 'username and password required'})
     }
-    else if(user){
+    
+  try{
+    const [user] = await User.findBy({ username : req.body.username })
+    
+  if(user){
       return res.status(400).json({message: 'username already taken'})
     } else {
       req.user = user
