@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { checkUsernameExists } = require('../middleware/restricted')
+const {  checkUsernameExists } = require('../middleware/restricted')
 const bcrypt = require('bcryptjs')
 const jwt =  require('jsonwebtoken')
 const User = require('../users/users-model')
