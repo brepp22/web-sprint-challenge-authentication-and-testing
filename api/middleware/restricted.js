@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const {JWT_SECRET} = require('../../config')
+const { JWT_SECRET } = require('../../config')
 
 const User = require('../users/users-model')
 
@@ -7,20 +7,21 @@ const User = require('../users/users-model')
 const restricted = (req, res, next) => {
   const token = req.headers.authorization
 
-  if(token){
-      return jwt.verify(token, JWT_SECRET, (err, decoded) => {
-        if (err) {
-          next({status: 401 , message: 'token invalid'}) 
-          console.log(token)
-        } else {
-          req.decodedJwt = decoded
-          console.log( req.decodedJwt)
-          next()
-        }
-        })
+  if (token) {
+    jwt.verify(token, JWT_SECRET, (err, decodedToken) => {
+      if (err) {
+        next({ status: 401, message: "token invalid" })
       } else {
-          next({status:401, message: "token required"})  
+        req.decodedJwt = decodedToken
+        console.log('decoded token', req.decodedJwt)
+
+        next()
       }
+    })
+  } else {
+    next({ status: 401, message: 'token required' })
+  }
+
       
       
      /*
