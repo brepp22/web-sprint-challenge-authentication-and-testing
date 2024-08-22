@@ -8,9 +8,6 @@ const {JWT_SECRET} = require('../../config')
 router.post('/register', checkUsernameExists , (req, res, next) => {
   const { username , password } = req.body
 
-  if(!username || !password) {
-    return res.status(400).json({message: 'username and password required'})
-  } else {
   const hash = bcrypt.hashSync(password, 8)
 
   User.add({username, password: hash})
@@ -18,7 +15,7 @@ router.post('/register', checkUsernameExists , (req, res, next) => {
       res.status(201).json(newUser)
     })
     .catch(next)
-  }
+  
 
 
   /*
