@@ -15,7 +15,6 @@ router.post('/register', checkUsernameExists , (req, res, next) => {
       res.status(201).json(newUser)
     })
     .catch(next)
-  
 
 
   /*

@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 
+const JWT_SECRET = require('../config')
+
 const { restricted } = require('./middleware/restricted.js');
 
 require('dotenv').config()

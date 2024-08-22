@@ -8,20 +8,19 @@ const restricted = (req, res, next) => {
   const token = req.headers.authorization
 
   if(!token){
-    next({ status: 401 , message: 'Token required'})
+   return res.status(401).json({message: 'token required'})
   }
   else if (token) {
     jwt.verify(token, JWT_SECRET, (err, decodedToken) => {
       if (err) {
-        next({ status: 401, message: "Token invalid" })
+        return res.status(401).json({message: 'token invalid'}) 
       } else {
         req.decodedJwt = decodedToken
         console.log('decoded token', req.decodedJwt)
         next()
       }
     })
-  } else {
-    next({ status: 401, message: 'You shall not pass!' })
+
 
   }
       
@@ -43,7 +42,7 @@ const checkUsernameExists = async (req, res, next) => {
   if(!req.body.username || !req.body.password){
       return res.status(400).json({message: 'username and password required'})
     }
-    
+
   try{
     const [user] = await User.findBy({ username : req.body.username })
     
