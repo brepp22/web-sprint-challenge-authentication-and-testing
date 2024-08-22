@@ -1,9 +1,9 @@
 const router = require('express').Router();
-const { restricted, checkUsernameExists } = require('../middleware/restricted')
+const { checkUsernameExists } = require('../middleware/restricted')
 const bcrypt = require('bcryptjs')
 const jwt =  require('jsonwebtoken')
 const User = require('../users/users-model')
-const {JWT_SECRET} = process.env
+const {JWT_SECRET} = require('../../config')
 
 router.post('/register', checkUsernameExists , (req, res, next) => {
   const { username , password } = req.body
@@ -13,7 +13,7 @@ router.post('/register', checkUsernameExists , (req, res, next) => {
   }
 
   const hash = bcrypt.hashSync(password, 8)
-  
+
   User.add({username, password: hash})
     .then(newUser => {
       res.status(201).json(newUser)
@@ -57,7 +57,7 @@ router.post('/login', async (req, res, next) => {
 
     const [user] = await User.findBy({ username })
 
-    if ( user.username && bcrypt.compareSync(password, user.password)) {
+    if ( user && bcrypt.compareSync(password, user.password)) {
       const token = generateToken(user)
       console.log(token)
       res.status(200).json({
